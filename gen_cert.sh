@@ -20,5 +20,16 @@ fn_stoponerror ()
 	fi
 }
 
+if [ -d "$dir_cert" ]; then
+	rm --force --recursive "$dir_cert"
+	fn_stoponerror "$?" $LINENO
+fi
+
+mkdir -p "$dir_cert"
+fn_stoponerror "$?" $LINENO
+
 sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout "$dir_cert/$name_key" -out "$dir_cert/$name_crt"
+fn_stoponerror "$?" $LINENO
+
+sudo chown -R $USER:users $dir_cert
 fn_stoponerror "$?" $LINENO
